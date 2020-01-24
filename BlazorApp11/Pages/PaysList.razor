@@ -1,0 +1,95 @@
+﻿@page "/payslist"
+@using BlazorApp11.Data
+@inject paysService PaysServe
+
+
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>Pays</h2>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a>Tableau de bord</a>
+            </li>
+            <li class="breadcrumb-item">
+                <a>Référentiels</a>
+            </li>
+            <li class="active breadcrumb-item">
+                Pays
+            </li>
+        </ol>
+    </div>
+    <div class="col-lg-2">
+    </div>
+</div>
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox ">
+                <div class="ibox-title">
+                 <br />
+                    <div class="ibox-tools">
+                        <a href="addpay" class="btn btn-primary btn-sm" style=" margin-left: 95%;">Ajouter</a>
+                    </div>
+                    <br />
+                </div>
+                <div class="ibox-content">
+
+                    @if (paysDtos == null)
+                    {
+                        <p><em>Loading...</em></p>
+                    }
+                    else
+                    {
+
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <td>Code</td>
+                                    <td>Libelle</td>
+                                    <td>Libelle Arabe</td>
+                                    <td>Version</td>
+                                    <td>Actions</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var itm in paysDtos)
+                                {
+                                    <tr>
+                                        <td>@itm.Code</td>
+                                        <td>@itm.Libelle</td>
+                                        <td>@itm.LibelleArabe</td>
+                                        <td>@itm.Version</td>
+                                        <td>
+                                            <a class="btn btn-outline-secondary" href="/edit/@itm.Id">Modifier</a>
+                                            <a class="btn btn-outline-danger" href="/delete/@itm.Id">Supprimer</a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    }
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@functions {
+
+    PaysDto[] paysDtos;
+    PaysDto pays = new PaysDto();
+    protected override async Task OnInitializedAsync()
+    {
+        await GetAllPays();
+    }
+    protected async Task GetAllPays()
+    {
+        paysDtos = await PaysServe.GetPaysAsync();
+    }
+
+}
+

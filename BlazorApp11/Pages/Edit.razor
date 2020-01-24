@@ -1,0 +1,55 @@
+﻿@page "/edit/{Id}"
+@using BlazorApp11.Data
+@inject paysService PaysServe
+@inject NavigationManager NavigationManager
+
+<h3>Modifier</h3>
+
+<div class="row jumbotron-fluid">
+    <div class="col-md-12">
+        <div class="form-group">
+            <label for="Code"  class="control-label">Code</label>
+            <input for="Code" @bind="@dto.Code" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label for="Libelle" class="control-label">Libellé</label>
+            <input for="Libelle" @bind="@dto.Libelle" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label for="LibelleArabe" class="control-label">Libellé Arabe</label>
+            <input for="LibelleArabe" bind="@dto.LibelleArabe" class="form-control" />
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary" @onclick="@(async () => await UpdatePays())">Modifier</button>
+            <button class="btn btn-warning" @onclick="@RedirectToIndex">Annuler</button>
+        </div>
+    </div>
+</div>
+
+@functions {
+    [Parameter]
+    public String Id { get; set; }
+
+    PaysDto dto = new PaysDto();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetPays();
+    }
+    protected async Task GetPays()
+    {
+        dto = await PaysServe.GetPaysByIdAsync(Convert.ToInt32(Id));
+    }
+
+    protected async Task UpdatePays()
+    {
+        await PaysServe.UpdatePayAsync(Convert.ToInt32(Id), dto);
+        RedirectToIndex();
+    }
+
+    void RedirectToIndex()
+    {
+        NavigationManager.NavigateTo("payslist");
+    }
+}
+

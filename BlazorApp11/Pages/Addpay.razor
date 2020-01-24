@@ -1,0 +1,43 @@
+﻿@page "/addpay"
+@using BlazorApp11.Data
+@inject paysService PaysServe
+@inject NavigationManager NavigationManager
+
+<h1>Ajouter Pays</h1>
+
+    <div class="row jumbotron-fluid">
+        <div class="col-md-12">
+            <div class="form-group">
+                <label for="Code" class="control-label">Code</label>
+                <input for="Code" @bind="@paysDto.Code" class="form-control" required />
+            </div>
+            <div class="form-group">
+                <label for="Libelle" class="control-label">Libellé</label>
+                <input type="text" for="Libelle" @bind="@paysDto.Libelle" class="form-control" required />
+            </div>
+            <div class="form-group">
+                <label for="LibelleArabe" class="control-label">Libellé Arabe</label>
+                <input type="text" for="LibelleArabe" @bind="@paysDto.LibelleArabe" class="form-control" />
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary" @onclick="@(async () => await CreatePay())">Enregistrer</button>
+                <button type="submit" class="btn btn-warning" @onclick="@RedirectToIndex">Annuler</button>
+            </div>
+        </div>
+    </div>
+
+
+
+@functions {
+    AddPays paysDto = new AddPays();
+    protected async Task CreatePay()
+    {
+        await PaysServe.InsertPayAsync(paysDto);
+        RedirectToIndex();
+    }
+    void RedirectToIndex()
+    {
+        NavigationManager.NavigateTo("payslist");
+    }
+
+}

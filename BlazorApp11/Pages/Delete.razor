@@ -1,0 +1,104 @@
+﻿@page "/delete/{Id}"
+@using BlazorApp11.Data
+@inject paysService PaysServe
+@inject NavigationManager NavigationManager
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>Pays</h2>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a>Tableau de bord</a>
+            </li>
+            <li class="breadcrumb-item">
+                <a>Référentiels</a>
+            </li>
+            <li class="breadcrumb-item">
+                <a href="/payslist">Pays</a>
+            </li>
+            <li class="breadcrumb-item">
+                Suppression Pays
+            </li>
+        </ol>
+    </div>
+    <div class="col-lg-2">
+    </div>
+</div>
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox ">
+                <div class="ibox-title">
+                    <h5>Supprimer</h5>
+                </div>
+                <div class="ibox-content">
+                    <h3>Voulez vous supprimer ?</h3>
+                    <div>
+                        <dl class="row">
+                            <dt class="col-sm-2">
+                                Code
+                            </dt>
+                            <dd class="col-sm-10">
+                                @dto.Code
+                            </dd>
+                            <dt class="col-sm-2">
+                                Libellé
+                            </dt>
+                            <dd class="col-sm-10">
+                                @dto.Libelle
+                            </dd>
+                            <dt class="col-sm-2">
+                                Libellé Arabe
+                            </dt>
+                            <dd class="col-sm-10">
+                                @dto.LibelleArabe
+                            </dd>
+                            <dt class="col-sm-2">
+                                Version
+                            </dt>
+                            <dd class="col-sm-10">
+                                @dto.Version
+                            </dd>
+                        </dl>
+                        <form>
+                            <div class="form-group">
+                                <a  class="btn btn-danger" @onclick="@(async () => await DeletePays())">Supprimer</a>
+                                <a  class="btn btn-warning" @onclick="@RedirectToIndex">Annuler</a>
+                            </div>
+                        </form>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@functions {
+    [Parameter]
+    public String Id { get; set; }
+
+    PaysDto dto = new PaysDto();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetPays();
+    }
+
+    protected async Task GetPays()
+    {
+        dto = await PaysServe.GetPaysByIdAsync(Convert.ToInt32(Id));
+    }
+
+    protected async Task DeletePays()
+    {
+        await PaysServe.DeletePayAsync(Id);
+        RedirectToIndex();
+    }
+
+    void RedirectToIndex()
+    {
+        NavigationManager.NavigateTo("payslist");
+    }
+}
